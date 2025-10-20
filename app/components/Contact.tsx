@@ -175,7 +175,7 @@ const Contact = () => {
                   <div className="transition-transform group-hover:translate-x-2 duration-300 ease-in-out">
                     <p className="text-textLight text-sm">LinkedIn</p>
                     <a href="https://www.linkedin.com/in/anurag-yv/" target="_blank" rel="noopener noreferrer" className="text-text hover:text-accent transition-colors font-medium">
-                      linkedin.com/in/anurag-yv/
+                      anurag-yv
                     </a>
                   </div>
                 </div>
@@ -194,7 +194,7 @@ const Contact = () => {
                   <div className="transition-transform group-hover:translate-x-2 duration-300 ease-in-out">
                     <p className="text-textLight text-sm">GitHub</p>
                     <a href="https://github.com/anurag-yv" target="_blank" rel="noopener noreferrer" className="text-text hover:text-accent transition-colors font-medium">
-                      github.com/anurag-yv
+                      anurag-yv
                     </a>
                   </div>
                 </div>
@@ -213,7 +213,7 @@ const Contact = () => {
                   <div className="transition-transform group-hover:translate-x-2 duration-300 ease-in-out">
                     <p className="text-textLight text-sm">Discord</p>
                     <a href="https://discordapp.com/1337097060343746560/" target="_blank" rel="noopener noreferrer" className="text-text hover:text-accent transition-colors font-medium">
-                      discord.com/anuragyadav_68478
+                      anuragyadav_68478
                     </a>
                   </div>
                 </div>
@@ -232,7 +232,7 @@ const Contact = () => {
                   <div className="transition-transform group-hover:translate-x-2 duration-300 ease-in-out">
                     <p className="text-textLight text-sm">Twitter</p>
                     <a href="https://twitter.com/ANURAGY099" target="_blank" rel="noopener noreferrer" className="text-text hover:text-accent transition-colors font-medium">
-                      twitter.com/ANURAGY099
+                      ANURAGY099
                     </a>
                   </div>
                 </div>
