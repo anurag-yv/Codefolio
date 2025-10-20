@@ -13,27 +13,27 @@ interface GithubRepo {
   fork: boolean
 }
 
-
 export async function getGithubRepos(username: string): Promise<GithubRepo[]> {
   try {
     const token = process.env.GITHUB_TOKEN;
     const headers = token ? { Authorization: `token ${token}` } : {};
     
-    const response = await axios.get(`https://api.github.com/users/${anurag-yv}/repos`, {
-      headers,
-      params: {
-        sort: 'updated',
-        per_page: 20
+    const response = await axios.get(
+      `https://api.github.com/users/${username}/repos`,
+      {
+        headers,
+        params: {
+          sort: 'updated',
+        },
       }
-    })
+    );
     
-    return response.data.filter((repo: GithubRepo) => !repo.fork)
+    return response.data.filter((repo: GithubRepo) => !repo.fork);
   } catch (error) {
-    console.error('Error fetching GitHub repositories:', error)
-    return []
+    console.error('Error fetching GitHub repositories:', error);
+    return [];
   }
 }
-
 
 export function formatRepoData(repos: GithubRepo[]) {
   return repos.map(repo => ({
@@ -46,16 +46,17 @@ export function formatRepoData(repos: GithubRepo[]) {
     stars: repo.stargazers_count,
     forks: repo.forks_count,
     image: `/projects/${repo.name.toLowerCase().replace(/_/g, '-')}.png`
-  }))
+  }));
 }
-
 
 export async function getGithubProfile(username: string) {
   try {
-    const response = await axios.get(`https://api.github.com/users/${anurag-yv}`)
-    return response.data
+    const response = await axios.get(
+      `https://api.github.com/users/${username}`
+    );
+    return response.data;
   } catch (error) {
-    console.error('Error fetching GitHub profile:', error)
-    return null
+    console.error('Error fetching GitHub profile:', error);
+    return null;
   }
-} 
+}

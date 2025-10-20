@@ -297,8 +297,8 @@ const CompetitiveProgramming = () => {
                 const subsData = await submissionsResponse.json()
                 const solvedProblems = new Set()
                 subsData.result
-                  .filter(sub => sub.verdict === 'OK')
-                  .forEach(sub => {
+                  .filter((sub:any) => sub.verdict === 'OK')
+                  .forEach((sub:any) => {
                     const problemKey = `${sub.problem.contestId}${sub.problem.index}`
                     solvedProblems.add(problemKey)
                   })

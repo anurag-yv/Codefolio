@@ -34,8 +34,10 @@ const AnimatedBackground = () => {
       twinkleSpeed: number
 
       constructor() {
-        this.x = Math.random() * canvas.width
-        this.y = Math.random() * canvas.height
+        const width = canvas?.width || 0
+        const height = canvas?.height || 0
+        this.x = Math.random() * width
+        this.y = Math.random() * height
         this.radius = Math.random() * 1.5 + 0.5
         this.opacity = Math.random()
         this.twinkleSpeed = Math.random() * 0.02 + 0.01
@@ -63,18 +65,22 @@ const AnimatedBackground = () => {
       color: string
 
       constructor() {
-        this.x = Math.random() * canvas.width
-        this.y = Math.random() * canvas.height * 0.6  // Keep clouds in upper half
+        const width = canvas?.width || 0
+        const height = canvas?.height || 0
+        this.x = Math.random() * width
+        this.y = Math.random() * height * 0.6
         this.size = Math.random() * 80 + 40
         this.speed = Math.random() * 0.3 + 0.1
         this.color = `rgba(255, 255, 255, ${Math.random() * 0.1 + 0.05})`
       }
 
       update() {
+        const width = canvas?.width || 0
+        const height = canvas?.height || 0
         this.x += this.speed
-        if (this.x > canvas.width + this.size) {
+        if (this.x > width + this.size) {
           this.x = -this.size
-          this.y = Math.random() * canvas.height * 0.6
+          this.y = Math.random() * height * 0.6
         }
       }
 
@@ -97,22 +103,22 @@ const AnimatedBackground = () => {
     const animate = (time: number) => {
       if (!ctx || !canvas) return
 
-      // Gradient night sky background
-      const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height)
-      gradient.addColorStop(0, '#0f0f23')  // Deep indigo
+      const width = canvas?.width || 0
+      const height = canvas?.height || 0
+
+      const gradient = ctx.createLinearGradient(0, 0, 0, height)
+      gradient.addColorStop(0, '#0f0f23')
       gradient.addColorStop(0.3, '#1a1a3a')
       gradient.addColorStop(0.7, '#2a1a4a')
-      gradient.addColorStop(1, '#1a0f2a')  // Purple twilight
+      gradient.addColorStop(1, '#1a0f2a')
       ctx.fillStyle = gradient
-      ctx.fillRect(0, 0, canvas.width, canvas.height)
+      ctx.fillRect(0, 0, width, height)
 
-      // Update and draw clouds
       clouds.forEach(cloud => {
         cloud.update()
         cloud.draw()
       })
 
-      // Update and draw stars
       stars.forEach(star => {
         star.update(time)
         star.draw()
@@ -129,7 +135,6 @@ const AnimatedBackground = () => {
     }
   }, [])
 
-  // Aurora wave overlays
   const auroraWaves = [
     { top: '10%', color: 'from-indigo-500 to-purple-600', delay: 0 },
     { top: '30%', color: 'from-purple-600 to-pink-500', delay: 5 },
@@ -142,31 +147,30 @@ const AnimatedBackground = () => {
         ref={canvasRef}
         className="fixed inset-0 w-full h-full -z-10"
       />
-      
-      {/* Aurora-like wave overlays */}
+
       {auroraWaves.map((wave, index) => (
-        <motion.div
-          key={index}
-          className="fixed left-0 w-full h-1/2 bg-gradient-to-r"
-          style={{ top: wave.top }}
-          initial={{ x: '-100%' }}
-          animate={{
-            x: ['-100%', '100%', '-100%'],
-            opacity: [0.1, 0.3, 0.1]
-          }}
-          transition={{
-            duration: 20,
-            repeat: Infinity,
-            delay: wave.delay,
-            ease: 'easeInOut'
-          }}
-          style={{
-            backgroundImage: `linear-gradient(to right, ${wave.color.replace('from-', '').replace('to-', ', ')})`
-          }}
-        />
+       <motion.div
+  key={index}
+  className="fixed left-0 w-full h-1/2 bg-gradient-to-r"
+  style={{
+    top: wave.top,
+    backgroundImage: `linear-gradient(to right, ${wave.color.replace('from-', '').replace('to-', ', ')})`,
+  }}
+  initial={{ x: '-100%' }}
+  animate={{
+    x: ['-100%', '100%', '-100%'],
+    opacity: [0.1, 0.3, 0.1]
+  }}
+  transition={{
+    duration: 20,
+    repeat: Infinity,
+    delay: wave.delay,
+    ease: 'easeInOut'
+  }}
+/>
+
       ))}
 
-      {/* Charming floating petals or sparkles */}
       <div className="fixed inset-0 pointer-events-none -z-5">
         {[...Array(12)].map((_, i) => (
           <motion.div
@@ -191,7 +195,6 @@ const AnimatedBackground = () => {
         ))}
       </div>
 
-      {/* Subtle vignette for charm */}
       <div className="fixed inset-0 pointer-events-none -z-0 bg-gradient-to-r from-black/20 via-transparent to-black/20" />
     </>
   )
