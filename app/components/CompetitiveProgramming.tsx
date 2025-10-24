@@ -283,44 +283,54 @@ const CompetitiveProgramming = () => {
           throw new Error('Failed to fetch LeetCode data')
         }
 
-        // Fetch CodeForces
-        const cfInfoResponse = await fetch(`https://codeforces.com/api/user.info?handles=${codeforcesUsername}`)
-        if (cfInfoResponse.ok) {
-          const cfInfo = await cfInfoResponse.json()
-          const user = cfInfo.result[0]
-          if (user) {
-            // Fetch submissions for solved count
-            let solved = 0
-            try {
-              const submissionsResponse = await fetch(`https://codeforces.com/api/user.status?handle=${codeforcesUsername}&from=1&count=100000`)
-              if (submissionsResponse.ok) {
-                const subsData = await submissionsResponse.json()
-                const solvedProblems = new Set()
-                subsData.result
-                  .filter((sub:any) => sub.verdict === 'OK')
-                  .forEach((sub:any) => {
-                    const problemKey = `${sub.problem.contestId}${sub.problem.index}`
-                    solvedProblems.add(problemKey)
-                  })
-                solved = solvedProblems.size
-              }
-            } catch (subError) {
-              console.error('Error fetching CF submissions:', subError)
-              // Fallback to 0 or hardcoded
-            }
+// Fetch CodeForces
+const cfInfoResponse = await fetch(`https://codeforces.com/api/user.info?handles=${codeforcesUsername}`)
+if (cfInfoResponse.ok) {
+  const cfInfo = await cfInfoResponse.json()
+  const user = cfInfo.result[0]
+  if (user) {
+    // Fetch submissions for solved count
+    let solved = 0
+    try {
+      const submissionsResponse = await fetch(`https://codeforces.com/api/user.status?handle=${codeforcesUsername}&from=1&count=100000`)
+      if (submissionsResponse.ok) {
+        const subsData = await submissionsResponse.json()
+        const solvedProblems = new Set()
+        subsData.result
+          .filter((sub:any) => sub.verdict === 'OK')
+          .forEach((sub:any) => {
+            const problemKey = `${sub.problem.contestId}${sub.problem.index}`
+            solvedProblems.add(problemKey)
+          })
+        solved = solvedProblems.size
+      }
+    } catch (subError) {
+      console.error('Error fetching CF submissions:', subError)
+    }
 
-            const cfStats = {
-              rating: user.rating,
-              rank: user.rank,
-              solved,
-              contests: user.friendOfCount || 0,
-              badges: [] // No badges in API
-            }
-            setPlatforms(prev => prev.map(p => p.name === 'CodeForces' ? { ...p, stats: { ...cfStats, loading: false } } : p))
-          }
-        } else {
-          throw new Error('Failed to fetch CodeForces data')
-        }
+    // fetch number of contests participated
+    let contests = 0
+    try {
+      const contestsResponse = await fetch(`https://codeforces.com/api/user.rating?handle=${codeforcesUsername}`)
+      if (contestsResponse.ok) {
+        const contestsData = await contestsResponse.json()
+        contests = contestsData.result.length // ✅ correct contest count
+      }
+    } catch (contestError) {
+      console.error('Error fetching CF contest count:', contestError)
+    }
+
+    const cfStats = {
+      rating: user.rating,
+      rank: user.rank,
+      solved,
+      contests, // ✅ updated correctly
+      badges: []
+    }
+    setPlatforms(prev => prev.map(p => p.name === 'CodeForces' ? { ...p, stats: { ...cfStats, loading: false } } : p))
+  }
+}
+
 
         // Fetch CodeChef
         const ccResponse = await fetch(`https://competeapi.vercel.app/user/codechef/${codechefUsername}/`)
