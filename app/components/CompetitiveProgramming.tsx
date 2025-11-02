@@ -308,7 +308,7 @@ if (cfInfoResponse.ok) {
       console.error('Error fetching CF submissions:', subError)
     }
 
-    // fetch number of contests participated
+    // fetch number of contests
     let contests = 0
     try {
       const contestsResponse = await fetch(`https://codeforces.com/api/user.rating?handle=${codeforcesUsername}`)
