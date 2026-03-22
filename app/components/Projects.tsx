@@ -23,7 +23,7 @@ const fallbackProjects: Project[] = [
     id: 1,
     title: "Waste Management System (WMS)",
     description:
-      "A system to manage warehouse inventory, stock tracking and operations efficiently.",
+      "A system to manage waste and track collection schedules.",
     technologies: ["React", "Node.js", "Express.js", "JavaScript"],
     github: "https://github.com/anurag-yv",
     demo: "",
