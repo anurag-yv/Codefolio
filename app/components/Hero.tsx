@@ -32,7 +32,7 @@ const Hero = () => {
             transition={{ duration: 0.5, delay: 0.2 }}
           >
             <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold mb-4">
-              <span className="text-text">Hi, I'm </span>
+              {/* <span className="text-text">Hi, I'm </span> */}
               <span className="gradient-text animate-gradient">Anurag Yadav</span>
             </h1>
           </motion.div>
@@ -43,7 +43,7 @@ const Hero = () => {
             transition={{ duration: 0.5, delay: 0.4 }}
           >
             <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-textLight mb-6">
-              Software Developer & Problem Solver
+              Aspiring Software Developer
             </h2>
           </motion.div>
           

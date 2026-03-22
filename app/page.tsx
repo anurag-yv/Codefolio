@@ -7,6 +7,7 @@ import Timeline from './components/Timeline'
 import Contact from './components/Contact'
 import Footer from './components/Footer'
 import AnimatedBackground from './components/AnimatedBackground'
+import Certifications from './components/Certifications'
 
 export default function Home() {
   return (
@@ -18,7 +19,9 @@ export default function Home() {
         <About />
         <CompetitiveProgramming />
         <Projects />
+        <Certifications />
         <Timeline />
+        
         <Contact />
       </div>
       <Footer />
