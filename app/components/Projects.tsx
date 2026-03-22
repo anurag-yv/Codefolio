@@ -17,6 +17,34 @@ type Project = {
   image?: string;
 };
 
+// 🔥 STATIC FALLBACK PROJECTS (ONLY USED IF API FAILS)
+const fallbackProjects: Project[] = [
+  {
+    id: 1,
+    title: "Waste Management System (WMS)",
+    description:
+      "A system to manage warehouse inventory, stock tracking and operations efficiently.",
+    technologies: ["React", "Node.js", "Express.js", "JavaScript"],
+    github: "https://github.com/anurag-yv",
+    demo: "",
+    stars: 0,
+    forks: 0,
+    image: "wms.png",
+  },
+  {
+    id: 2,
+    title: "Mental Health Awareness Among Children System",
+    description:
+      "A mental health monitoring and assessment platform for children.",
+    technologies: ["PHP", "Tailwind CSS", "Chart.js"],
+    github: "https://github.com/anurag-yv",
+    demo: "",
+    stars: 0,
+    forks: 0,
+    image: "mental-health.png",
+  },
+];
+
 const ProjectCard = ({ project }: { project: Project }) => {
   return (
     <motion.div
@@ -27,7 +55,6 @@ const ProjectCard = ({ project }: { project: Project }) => {
       viewport={{ once: true }}
     >
       <div className="relative overflow-hidden h-48 -mx-6 -mt-6 mb-6 rounded-t-lg">
-
         {project.image ? (
           <Image
             src={`/projects/${project.image}`}
@@ -43,7 +70,6 @@ const ProjectCard = ({ project }: { project: Project }) => {
 
         <div className="absolute inset-0 bg-primary/80 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity duration-300">
           <div className="flex space-x-4">
-
             <motion.a
               href={project.github}
               target="_blank"
@@ -65,7 +91,6 @@ const ProjectCard = ({ project }: { project: Project }) => {
                 <FaExternalLinkAlt size={20} />
               </motion.a>
             )}
-
           </div>
         </div>
       </div>
@@ -76,7 +101,6 @@ const ProjectCard = ({ project }: { project: Project }) => {
         </h3>
 
         <div className="flex items-center space-x-3 text-textLight text-sm">
-
           {project.stars !== undefined && (
             <div className="flex items-center">
               <FaStar className="mr-1 text-yellow-400" />
@@ -90,7 +114,6 @@ const ProjectCard = ({ project }: { project: Project }) => {
               {project.forks}
             </div>
           )}
-
         </div>
       </div>
 
@@ -113,23 +136,21 @@ const ProjectCard = ({ project }: { project: Project }) => {
 };
 
 const Projects = () => {
-
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-
     const fetchProjects = async () => {
-
       try {
-
         const res = await fetch(
           "https://api.github.com/users/anurag-yv/repos"
         );
 
-        const repos = await res.json();
+        if (!res.ok) {
+          throw new Error("GitHub API failed");
+        }
 
-        console.log("Repo names:", repos.map((r: any) => r.name));
+        const repos = await res.json();
 
         const selected: Project[] = [];
 
@@ -143,15 +164,14 @@ const Projects = () => {
           r.name?.toLowerCase().includes("health")
         );
 
-        // ✅ IF FOUND → use real repos
         if (wmsRepo) {
           selected.push({
             id: wmsRepo.id,
             title: "Waste Management System (WMS)",
             description:
               wmsRepo.description ||
-              "A system to manage warehouse inventory, stock tracking and operations efficiently.",
-            technologies: [wmsRepo.language || "React", "React", "Express.js", "Node.js", "JavaScript"],
+              "A system to manage warehouse inventory.",
+            technologies: [wmsRepo.language || "React"],
             github: wmsRepo.html_url,
             demo: wmsRepo.homepage || "",
             stars: wmsRepo.stargazers_count,
@@ -163,11 +183,10 @@ const Projects = () => {
         if (mentalRepo) {
           selected.push({
             id: mentalRepo.id,
-            title: "Mental Health Awareness Among Children System",
+            title: "Mental Health Awareness System",
             description:
-              mentalRepo.description ||
-              "A mental health monitoring and assessment platform for children.",
-            technologies: [mentalRepo.language || "PHP", "Tailwind CSS", "PHP", "Chart.js"],
+              mentalRepo.description || "Mental health platform.",
+            technologies: [mentalRepo.language || "PHP"],
             github: mentalRepo.html_url,
             demo: mentalRepo.homepage || "",
             stars: mentalRepo.stargazers_count,
@@ -176,44 +195,23 @@ const Projects = () => {
           });
         }
 
-        // 🔥 FINAL FIX: fallback if not found
-        if (selected.length === 0 && repos.length > 0) {
-          const fallback = repos.slice(0, 2);
-
-          fallback.forEach((repo: any, index: number) => {
-            selected.push({
-              id: repo.id,
-              title:
-                index === 0
-                  ? "Waste Management System (WMS)"
-                  : "Mental Health Awareness Among Children System",
-              description:
-                repo.description ||
-                (index === 0
-                  ? "A system to manage warehouse inventory, stock tracking and operations efficiently."
-                  : "A mental health monitoring and assessment platform for children."),
-              technologies: [repo.language || "JavaScript"],
-              github: repo.html_url,
-              demo: repo.homepage || "",
-              stars: repo.stargazers_count,
-              forks: repo.forks_count,
-              image: index === 0 ? "wms.png" : "mental-health.png",
-            });
-          });
+        // ✅ If API worked but repos not found → fallback
+        if (selected.length === 0) {
+          setProjects(fallbackProjects);
+        } else {
+          setProjects(selected);
         }
-
-        setProjects(selected);
-
       } catch (error) {
-        console.error("Error fetching projects:", error);
-        setProjects([]);
+        console.error("GitHub failed → using fallback", error);
+
+        // ✅ If API completely fails → fallback
+        setProjects(fallbackProjects);
       }
 
       setLoading(false);
     };
 
     fetchProjects();
-
   }, []);
 
   return (
@@ -229,17 +227,11 @@ const Projects = () => {
 
       {loading ? (
         <div className="text-center text-textLight">Loading Projects...</div>
-      ) : projects.length === 0 ? (
-        <div className="text-center text-textLight">
-          No projects found (check repo names in console)
-        </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-
           {projects.map((project) => (
             <ProjectCard key={project.id} project={project} />
           ))}
-
         </div>
       )}
 
