@@ -73,19 +73,16 @@ const Navbar = () => {
         onHoverStart={() => setHovering(true)}
         onHoverEnd={() => setHovering(false)}
         className={`${scrolled ? 'bg-primary/40' : 'bg-primary/25'}
-          backdrop-blur-xl fixed w-[95%] sm:w-[90%] lg:w-[85%] top-4 z-50 py-3 sm:py-4 px-4 sm:px-6 transition-all duration-500
-          ${hovering ? 'shadow-[0_15px_40px_-10px_rgba(100,255,218,0.4)]' : 'shadow-[0_10px_30px_-5px_rgba(0,0,0,0.3)]'}
-          border border-accent/20 max-w-6xl rounded-xl`}
+        backdrop-blur-xl fixed w-[95%] sm:w-[90%] lg:w-[85%] top-4 z-50 py-3 sm:py-4 px-4 sm:px-6 transition-all duration-500
+        ${hovering ? 'shadow-[0_15px_40px_-10px_rgba(100,255,218,0.4)]' : 'shadow-[0_10px_30px_-5px_rgba(0,0,0,0.3)]'}
+        border border-accent/20 max-w-6xl rounded-xl`}
       >
-        <div className="flex justify-between items-center w-full">
 
-          {/* Desktop Navigation */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="hidden md:flex items-center space-x-6 lg:space-x-8"
-          >
+        {/* MAIN FLEX */}
+        <div className="flex items-center w-full">
+
+          {/* LEFT (Desktop Nav) */}
+          <div className="hidden md:flex items-center space-x-6 lg:space-x-8">
             {navItems.map((item) => (
               <Link
                 key={item}
@@ -105,22 +102,20 @@ const Navbar = () => {
                 />
               </Link>
             ))}
-          </motion.div>
+          </div>
 
-          {/* Right Side */}
-          <div className="flex items-center">
+          {/* RIGHT SIDE (PUSHED FULL RIGHT) */}
+          <div className="flex items-center space-x-4 ml-auto">
 
-            {/* Social Icons (only tablet & above) */}
-            <div className="hidden sm:flex items-center space-x-4">
-              <a href="https://github.com/anurag-yv" target="_blank"><FaGithub /></a>
-              <a href="https://www.linkedin.com/in/anurag-yv/" target="_blank"><FaLinkedin /></a>
-              <a href="https://twitter.com/" target="_blank"><FaTwitter /></a>
-            </div>
+            {/* Social Icons (VISIBLE ON ALL SCREENS) */}
+            <a href="https://github.com/anurag-yv" target="_blank"><FaGithub /></a>
+            <a href="https://www.linkedin.com/in/anurag-yv/" target="_blank"><FaLinkedin /></a>
+            <a href="https://twitter.com/" target="_blank"><FaTwitter /></a>
 
-            {/* Hamburger */}
+            {/* HAMBURGER */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden ml-3"
+              className="md:hidden"
             >
               {mobileMenuOpen ? <HiX size={24} /> : <HiMenu size={24} />}
             </button>
@@ -129,7 +124,7 @@ const Navbar = () => {
         </div>
       </motion.nav>
 
-      {/* Mobile Menu */}
+      {/* MOBILE MENU */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
